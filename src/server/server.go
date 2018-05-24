@@ -1,29 +1,22 @@
-package server
+package srv
 
 import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
 )
 
-func Start_Mux() {
+func SetMux() *mux.Router {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", ReceiveFile).Methods("POST")
 	//r.HandleFunc("/articles", handler).Methods("GET")
 
-	srv := &http.Server{
-		Handler: r,
-		Addr:    *server + ":" + *port,
-	}
-
-	log.Fatal(srv.ListenAndServe())
-
+	return r
 }
 
 func ReceiveFile(w http.ResponseWriter, r *http.Request) {

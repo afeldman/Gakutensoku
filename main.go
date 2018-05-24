@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
+	"github.com/afeldman/ktrans_server/src/server"
 	"github.com/joho/godotenv"
 )
 
@@ -27,9 +27,7 @@ func main() {
 	server := get_env_or_default("SERVER", "127.0.0.1")
 	port := get_env_or_default("PORT", "2510")
 
-	r := mux.NewRouter()
-	r.HandleFunc("/", server.ReceiveFile).Methods("POST")
-	//r.HandleFunc("/articles", handler).Methods("GET")
+	r := srv.SetMux()
 
 	srv := &http.Server{
 		Handler: r,
