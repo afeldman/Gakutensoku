@@ -1,15 +1,23 @@
 package main
 
 import (
-	"flag"
+	"io"
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+	// In the future we could report back on the status of our DB, or our cache
+	// (e.g. Redis) by performing a simple PING, and include them in the response.
+	io.WriteString(w, `{"alive": true}`)
+}
 
 func get_env_or_default(name string, or string) *string {
 	ret := os.Getenv(name)
@@ -29,21 +37,14 @@ func main() {
 	server := get_env_or_default("SERVER", "127.0.0.1")
 	port := get_env_or_default("PORT", "2510")
 
-	var dir string
-
-	flag.StringVar(&dir, "dir", ".", "the directory to serve files from. Defaults to the current dir")
-	flag.Parse()
 	r := mux.NewRouter()
-
-	// This will serve files under http://localhost:8000/static/<filename>
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(dir))))
+	r.HandleFunc("/", handler)
+	r.HandleFunc("/products", handler).Methods("POST")
+	r.HandleFunc("/articles", handler).Methods("GET")
 
 	srv := &http.Server{
 		Handler: r,
 		Addr:    *server + ":" + *port,
-		// Good practice: enforce timeouts for servers you create!
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
 	}
 
 	log.Fatal(srv.ListenAndServe())
