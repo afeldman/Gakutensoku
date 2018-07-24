@@ -1,1 +1,2 @@
-# ktrans_server
+# Gakutensoku
+KTrans is the only Karel compiler of FANUC. To make a better productivity I build this server. The server receive a karel package reads the ...
