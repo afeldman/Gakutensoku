@@ -3,6 +3,8 @@ package ktrans
 import (
 	"os/exec"
 	"strings"
+
+	string "github.com/afeldman/go-util/string"
 )
 
 var debug = true
@@ -23,7 +25,7 @@ func Init() *Ktrans {
 	this.Param["p"] = false
 
 	this.Conf = ""
-	this.In = "dhnuif.kl"
+	this.In = ""
 	this.Out = ""
 	this.Path = SearchForKtrans()
 	this.Ver = ""
@@ -42,16 +44,16 @@ func (this *Ktrans) Cmd() []byte {
 		}
 	}
 
-	if !strempty(this.Ver) {
+	if !string.StringEmpty(this.Ver) {
 		cmd_string = append(cmd_string, "/ver"+this.Ver)
 	}
-	if !strempty(this.In) {
+	if !string.StringEmpty(this.In) {
 		cmd_string = append(cmd_string, this.In)
 	}
-	if !strempty(this.Out) {
+	if !string.StringEmpty(this.Out) {
 		cmd_string = append(cmd_string, this.Out)
 	}
-	if !strempty(this.Conf) {
+	if !string.StringEmpty(this.Conf) {
 		cmd_string = append(cmd_string, "/config", this.Conf)
 	}
 

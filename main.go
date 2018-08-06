@@ -9,17 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/afeldman/ktrans_server/src/server"
+	env "github.com/afeldman/go-util/env"
 	"github.com/joho/godotenv"
 )
-
-func get_env_or_default(name string, or string) *string {
-	ret := os.Getenv(name)
-	if (len(ret) == 0) || (ret == "") {
-		ret = or
-	}
-	return &ret
-}
 
 func main() {
 
@@ -28,10 +20,9 @@ func main() {
 		log.Println("INFO: loading .env file failed")
 	}
 
-	server := get_env_or_default("SERVER", "127.0.0.1")
-	port := get_env_or_default("PORT", "2510")
-	wait_t, err := strconv.Atoi(
-		*get_env_or_default("WAIT", "30"))
+	server := env.GetEnvOrDefault("SERVER", "127.0.0.1")
+	port := env.GetEnvOrDefault("PORT", "2510")
+	wait_t, err := strconv.Atoi(*env.GetEnvOrDefault("WAIT", "30"))
 
 	wait := time.Duration(wait_t)
 
@@ -70,5 +61,4 @@ func main() {
 	// to finalize based on context cancellation.
 	log.Println("shutting down")
 	os.Exit(0)
-
 }

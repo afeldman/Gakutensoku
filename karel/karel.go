@@ -1,9 +1,10 @@
-package main
+package karel
 
 import (
 	"fmt"
-	ktrans "github.com/afeldman/karel/src/ktrans"
 	"runtime"
+
+	ktrans "github.com/afeldman/Gakutensoku/ktrans"
 )
 
 func main() {
@@ -11,5 +12,7 @@ func main() {
 		fmt.Println(ktrans.Version())
 		test := ktrans.Init()
 		test.Cmd()
+	} else {
+		fm
 	}
 }
