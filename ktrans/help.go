@@ -1,13 +1,16 @@
 package ktrans
 
-import "os/exec"
+import (
+	"os/exec"
 
+	print "github.com/afeldman/go-util/print"
+)
 func help() string {
 	cmd := exec.Command("ktrans")
-	printCommand(cmd)
+	print.PrintCommand(cmd)
 	output, err := cmd.CombinedOutput()
-	printError(err)
-	printOutput(output)
+	print.PrintError(err)
+	print.PrintOutput(output)
 
 	return string(output)
 }

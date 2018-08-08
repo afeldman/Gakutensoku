@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	env "github.com/afeldman/go-util/env"
+	"github.com/afeldman/go-util/string"
 
 	"os"
 	"path/filepath"
@@ -35,19 +36,18 @@ func findFile(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-func SearchForKtrans() string {
+func SearchForKtrans() (error,string) {
 
 	for _, path := range env.GetEnv("PATH") {
 		err := filepath.Walk(path, findFile)
 		if err != nil {
-			println("Error", err)
+			return err, ""
 		}
 	}
 
-	if !strempty(ktranspath) {
-		return ktranspath
-	} else {
-		return ""
+	if !str_util.StringEmpty(ktranspath) {
+		return nil, ktranspath
 	}
 
+	return nil, ""
 }

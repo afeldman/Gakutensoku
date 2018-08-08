@@ -4,8 +4,10 @@ import (
 	"os/exec"
 	"strings"
 
-	string "github.com/afeldman/go-util/string"
+	"log"
+
 	print "github.com/afeldman/go-util/print"
+	"github.com/afeldman/go-util/string"
 )
 
 var debug = true
@@ -32,10 +34,18 @@ func KtransInit() *Ktrans {
 	this.d = false
 	this.p = false
 
+	err, ktrans_path := SearchForKtrans()
+	if err != nil{
+		log.Println(err)
+	}
+	if !str_util.StringEmpty(ktrans_path) {
+		log.Println("No KTrans found in $PATH")
+	}
+
 	this.ConfigurationFile = ""
 	this.Input = ""
 	this.Output = ""
-	this.PathToKtrans = SearchForKtrans()
+	this.PathToKtrans = ktrans_path
 	this.Version = ""
 
 	return this
@@ -63,13 +73,13 @@ func (this *Ktrans) Cmd() []byte {
 		cmd_string = append(cmd_string, "/ver"+this.Version)
 	}
 	if !str_util.StringEmpty(this.Input) {
-		cmd_string = append(cmd_string, this.In)
+		cmd_string = append(cmd_string, this.Input)
 	}
 	if !str_util.StringEmpty(this.Output) {
-		cmd_string = append(cmd_string, this.Out)
+		cmd_string = append(cmd_string, this.Output)
 	}
 	if !str_util.StringEmpty(this.ConfigurationFile) {
-		cmd_string = append(cmd_string, "/config", this.Conf)
+		cmd_string = append(cmd_string, "/config", this.ConfigurationFile)
 	}
 
 	cmd := exec.Command(strings.Join(cmd_string, " "))

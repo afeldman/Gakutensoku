@@ -2,7 +2,6 @@ package ktrans
 
 import (
 	"encoding/json"
-	"log"
 	"gopkg.in/yaml.v2"
 )
 
@@ -14,7 +13,7 @@ func (this *Ktrans) ToJSON() (error,[]byte){
 	return nil, b
 }
 
-func FromJSON(json_str []byte) (error, *ktrans) {
+func FromJSON(json_str []byte) (error, *Ktrans) {
 	var ktrans Ktrans
 	err := json.Unmarshal(json_str, &ktrans)
 	if err != nil {
@@ -37,5 +36,5 @@ func FromYAML(yml_str []byte) (error,*Ktrans) {
 	if err != nil {
 		return err, nil
 	}
-	return nil, ktrans
+	return nil, &ktrans
 }
