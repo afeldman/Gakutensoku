@@ -5,30 +5,38 @@ import (
 	"strings"
 
 	string "github.com/afeldman/go-util/string"
+	print "github.com/afeldman/go-util/print"
 )
 
 var debug = true
 
 type Ktrans struct {
-	Path, Out, In, Ver, Conf string
-	Param                    map[string]bool
+	PathToKtrans       string `json:"ktrans" yaml:"ktrans"`
+	Output            string `json:"output,omitempty" yaml:"output,omitempty"`
+	Input             string `json:"input" yaml:"input"`
+	Version           string `json:"version" yaml:"version"`
+	ConfigurationFile string `json:"robot,omitempty" yaml:"robot,omitempty"`
+
+	l bool `json:"list,omitempty" yaml:"list,omitempty"`
+	r bool `json:"routine,omitempty" yaml:"routine,omitempty"`
+	p bool `json:"pause,omitempty" yaml:"pause,omitempty"`
+	d bool `json:"display,omitempty" yaml:"display,omitempty"`
 }
 
-func Init() *Ktrans {
+func KtransInit() *Ktrans {
 
 	this := new(Ktrans)
 
-	this.Param = make(map[string]bool)
-	this.Param["l"] = false
-	this.Param["r"] = false
-	this.Param["d"] = false
-	this.Param["p"] = false
+	this.l = false
+	this.r = false
+	this.d = false
+	this.p = false
 
-	this.Conf = ""
-	this.In = ""
-	this.Out = ""
-	this.Path = SearchForKtrans()
-	this.Ver = ""
+	this.ConfigurationFile = ""
+	this.Input = ""
+	this.Output = ""
+	this.PathToKtrans = SearchForKtrans()
+	this.Version = ""
 
 	return this
 }
@@ -36,32 +44,39 @@ func Init() *Ktrans {
 func (this *Ktrans) Cmd() []byte {
 
 	var cmd_string []string
-	cmd_string = append(cmd_string, this.Path)
+	cmd_string = append(cmd_string, this.PathToKtrans)
 
-	for k, v := range this.Param {
-		if v {
-			cmd_string = append(cmd_string, "/"+k)
-		}
-	}
 
-	if !string.StringEmpty(this.Ver) {
-		cmd_string = append(cmd_string, "/ver"+this.Ver)
+	if this.r {
+		cmd_string = append(cmd_string, "/r")
 	}
-	if !string.StringEmpty(this.In) {
+	if this.d {
+		cmd_string = append(cmd_string, "/d")
+	}
+	if this.l {
+		cmd_string = append(cmd_string, "/l")
+	}
+	if this.p {
+		cmd_string = append(cmd_string, "/p")
+	}
+	if !str_util.StringEmpty(this.Version) {
+		cmd_string = append(cmd_string, "/ver"+this.Version)
+	}
+	if !str_util.StringEmpty(this.Input) {
 		cmd_string = append(cmd_string, this.In)
 	}
-	if !string.StringEmpty(this.Out) {
+	if !str_util.StringEmpty(this.Output) {
 		cmd_string = append(cmd_string, this.Out)
 	}
-	if !string.StringEmpty(this.Conf) {
+	if !str_util.StringEmpty(this.ConfigurationFile) {
 		cmd_string = append(cmd_string, "/config", this.Conf)
 	}
 
 	cmd := exec.Command(strings.Join(cmd_string, " "))
-	printCommand(cmd)
+	print.PrintCommand(cmd)
 	output, err := cmd.CombinedOutput()
-	printError(err)
-	printOutput(output)
+	print.PrintError(err)
+	print.PrintOutput(output)
 
 	return output
 }
