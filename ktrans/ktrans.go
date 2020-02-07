@@ -7,82 +7,80 @@ import (
 	"log"
 
 	print "github.com/afeldman/go-util/print"
-	"github.com/afeldman/go-util/string"
+	str_util "github.com/afeldman/go-util/string"
 )
 
-var debug = true
-
 type Ktrans struct {
-	PathToKtrans       string `json:"ktrans" yaml:"ktrans"`
+	PathToKtrans      string `json:"ktrans" yaml:"ktrans"`
 	Output            string `json:"output,omitempty" yaml:"output,omitempty"`
 	Input             string `json:"input" yaml:"input"`
 	Version           string `json:"version" yaml:"version"`
 	ConfigurationFile string `json:"robot,omitempty" yaml:"robot,omitempty"`
 
-	l bool `json:"list,omitempty" yaml:"list,omitempty"`
-	r bool `json:"routine,omitempty" yaml:"routine,omitempty"`
-	p bool `json:"pause,omitempty" yaml:"pause,omitempty"`
-	d bool `json:"display,omitempty" yaml:"display,omitempty"`
+	L bool `json:"list,omitempty" yaml:"list,omitempty"`
+	R bool `json:"routine,omitempty" yaml:"routine,omitempty"`
+	Q bool `json:"pause,omitempty" yaml:"pause,omitempty"`
+	D bool `json:"display,omitempty" yaml:"display,omitempty"`
 }
 
-func KtransInit() *Ktrans {
+func Init() *Ktrans {
 
 	this := new(Ktrans)
 
-	this.l = false
-	this.r = false
-	this.d = false
-	this.p = false
+	this.L = false
+	this.R = false
+	this.D = false
+	this.Q = false
 
-	err, ktrans_path := SearchForKtrans()
-	if err != nil{
+	err, ktranspath := SearchForKtrans()
+	if err != nil {
 		log.Println(err)
 	}
-	if !str_util.StringEmpty(ktrans_path) {
+	if !str_util.StringEmpty(ktranspath) {
 		log.Println("No KTrans found in $PATH")
 	}
 
 	this.ConfigurationFile = ""
 	this.Input = ""
 	this.Output = ""
-	this.PathToKtrans = ktrans_path
+	this.PathToKtrans = ktranspath
 	this.Version = ""
 
 	return this
 }
 
+//Cmd This method builds the
 func (this *Ktrans) Cmd() []byte {
 
-	var cmd_string []string
-	cmd_string = append(cmd_string, this.PathToKtrans)
+	var cmdstring []string
+	cmdstring = append(cmdstring, this.PathToKtrans)
 
-
-	if this.r {
-		cmd_string = append(cmd_string, "/r")
+	if this.R {
+		cmdstring = append(cmdstring, "/r")
 	}
-	if this.d {
-		cmd_string = append(cmd_string, "/d")
+	if this.D {
+		cmdstring = append(cmdstring, "/d")
 	}
-	if this.l {
-		cmd_string = append(cmd_string, "/l")
+	if this.L {
+		cmdstring = append(cmdstring, "/l")
 	}
-	if this.p {
-		cmd_string = append(cmd_string, "/p")
+	if this.Q {
+		cmdstring = append(cmdstring, "/p")
 	}
 	if !str_util.StringEmpty(this.Version) {
-		cmd_string = append(cmd_string, "/ver"+this.Version)
+		cmdstring = append(cmdstring, "/ver"+this.Version)
 	}
 	if !str_util.StringEmpty(this.Input) {
-		cmd_string = append(cmd_string, this.Input)
+		cmdstring = append(cmdstring, this.Input)
 	}
 	if !str_util.StringEmpty(this.Output) {
-		cmd_string = append(cmd_string, this.Output)
+		cmdstring = append(cmdstring, this.Output)
 	}
 	if !str_util.StringEmpty(this.ConfigurationFile) {
-		cmd_string = append(cmd_string, "/config", this.ConfigurationFile)
+		cmdstring = append(cmdstring, "/config", this.ConfigurationFile)
 	}
 
-	cmd := exec.Command(strings.Join(cmd_string, " "))
+	cmd := exec.Command(strings.Join(cmdstring, " "))
 	print.PrintCommand(cmd)
 	output, err := cmd.CombinedOutput()
 	print.PrintError(err)

@@ -13,6 +13,6 @@ func main() {
 		test := ktrans.Init()
 		test.Cmd()
 	} else {
-		fm
+		fmt.Println("for the momement there is not unix version. FANUC only supports Windows")
 	}
 }
