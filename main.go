@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	srv "github.com/afeldman/Gakutensoku/server"
 	env "github.com/afeldman/go-util/env"
 	"github.com/joho/godotenv"
 )
@@ -22,7 +23,10 @@ func main() {
 
 	server := env.GetEnvOrDefault("SERVER", "127.0.0.1")
 	port := env.GetEnvOrDefault("PORT", "2510")
-	wait_t, err := strconv.Atoi(*env.GetEnvOrDefault("WAIT", "30"))
+	wait_t, err := strconv.Atoi(env.GetEnvOrDefault("WAIT", "30"))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	wait := time.Duration(wait_t)
 
@@ -30,7 +34,7 @@ func main() {
 
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         *server + ":" + *port,
+		Addr:         server + ":" + port,
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,

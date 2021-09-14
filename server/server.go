@@ -14,8 +14,6 @@ func SetMux() *mux.Router {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", ReceiveFile).Methods("POST")
-	//r.HandleFunc("/articles", handler).Methods("GET")
-
 	return r
 }
 
