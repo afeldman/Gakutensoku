@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/afeldman/Gakutensoku/server"
+	server "github.com/afeldman/Gakutensoku/upload"
 	"github.com/afeldman/go-util/env"
 )
 
