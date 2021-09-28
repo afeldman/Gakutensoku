@@ -8,9 +8,9 @@ import (
 
 func NewClient(url, filepath string) *resumable.Resumable {
 
-	chunkSize := int(1 * (1 << 20)) // 1MB
+	chunksize := int(1 * (1 << 20)) // 1MB
 
-	return resumable.New(url, filepath, &http.Client{}, chunkSize, false)
+	return resumable.New(url, filepath, &http.Client{}, chunksize, false)
 }
 
 func SendData(client *resumable.Resumable) {
