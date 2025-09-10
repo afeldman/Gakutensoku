@@ -23,7 +23,7 @@ type Ktrans struct {
 	D bool `json:"display,omitempty" yaml:"display,omitempty"`
 }
 
-func Init() *Ktrans {
+func InitKTrans() *Ktrans {
 
 	this := new(Ktrans)
 
@@ -49,7 +49,7 @@ func Init() *Ktrans {
 	return this
 }
 
-//Cmd This method builds the
+// Cmd This method builds the
 func (this *Ktrans) Cmd() []byte {
 
 	var cmdstring []string
