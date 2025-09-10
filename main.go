@@ -1,22 +1,18 @@
-package main
+package karel
 
 import (
 	"fmt"
-	"log"
-	"net/http"
+	"runtime"
 
-	routes "github.com/afeldman/Gakutensoku/upload"
-	"github.com/afeldman/go-util/env"
+	ktrans "github.com/afeldman/Gakutensoku/ktrans"
 )
 
 func main() {
-
-	port := env.GetEnvOrDefault("GAKUTENSOKU_PORT", "2510")
-
-	log.Println(fmt.Sprintf("Listing on Port: :%s", port))
-
-	http.HandleFunc("/", routes.HTTPHandler)
-
-	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
-
+	if runtime.GOOS == "windows" {
+		fmt.Println(ktrans.Version())
+		test := ktrans.InitKTrans()
+		test.Cmd()
+	} else {
+		fmt.Println("for the momement there is not unix version. FANUC only supports Windows")
+	}
 }
